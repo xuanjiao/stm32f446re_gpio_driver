@@ -2,7 +2,7 @@
  * stm32f446xx.h
  *
  *  Created on: Feb 24, 2021
- *      Author: Xuanjiao
+ *      Author: Xuanjiao Zhu
  */
 
 #ifndef INC_STM32F446XX_H_
