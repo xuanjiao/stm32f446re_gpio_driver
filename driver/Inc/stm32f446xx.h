@@ -251,4 +251,9 @@ typedef struct
 #define FLAG_RESET         		RESET
 #define FLAG_SET 				SET
 
+/*
+ * Include driver header files
+ */
+#include "stm32f446xx_gpio.h"
+
 #endif /* INC_STM32F446XX_H_ */

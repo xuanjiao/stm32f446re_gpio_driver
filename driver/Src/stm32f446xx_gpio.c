@@ -240,7 +240,7 @@ void GPIO_WriteToOutputPort(GPIO_RegDef_t *pGPIOx, uint16_t Value)
  */
 void GPIO_ToggleOutputPin(GPIO_RegDef_t *pGPIOx, uint8_t PinNumber)
 {
-	pGPIOx->IDR ^= ( 0x1 << PinNumber);
+	pGPIOx->ODR ^= ( 0x1 << PinNumber);
 }
 
 /*
