@@ -33,44 +33,6 @@ typedef struct
 	GPIO_PinConfig_t	GPIO_PinConfig;		/* This pointer holds the GPIO pin configuration setting */
 }GPIO_Handle_t;
 
-/**********************************************************************************************
- *								 APIs supported by this driver
- **********************************************************************************************/
-
-/*
- * Peripheral clock configuration
- */
-void GPIO_PeriClockControl(GPIO_RegDef_t *pGPIOx, uint8_t EnorDi);
-
-/*
- * Init and De-Init
- */
-void GPIO_Init(GPIO_Handle_t *pGPIOHandle);
-void GPIO_DeInit(GPIO_RegDef_t *pGPIOx); 	/*Use reset register to reset the GPIO port */
-
-/*
- * Data read and write
- */
-uint8_t GPIO_ReadFromInputPin(GPIO_RegDef_t *pGPIOx, uint8_t PinNumber);
-uint16_t GPIO_ReadFromInputPort(GPIO_RegDef_t *pGPIOx);
-void GPIO_WriteToInputPin(GPIO_RegDef_t *pGPIOx, uint8_t pinNumber, uint8_t Value);
-void GPIO_WriteToInputPort(GPIO_RegDef_t *pGPIOx, uint16_t Value);
-void GPIO_ToggleOutputPin(GPIO_RegDef_t *pGPIOx, uint8_t PinNumber);
-
-/*
- * IRQ (Interrupt Request) Configuration and ISR (interrupt service routine) handling
- */
-void GPIO_IRQConfig(uint8_t IRQNumber, uint8_t IRQPriority, uint8_t EnorDi);
-void GPIO_IRQHandling(uint8_t PinNumber);
-
-/*
- * Some general Macros
- */
-#define ENABLE					1
-#define DISABLE					0
-#define SET_ENABLE				ENABLE
-#define RESET					DISABLE
-
 /*
  * @GPIO_PIN_NUMBERS
  * GPIO pin numbers
@@ -127,8 +89,34 @@ void GPIO_IRQHandling(uint8_t PinNumber);
 #define GPIO_OUT_TYPE_PP		0
 #define GPIO_OUT_TYPE_OD		1
 
+/**********************************************************************************************
+ *								 APIs supported by this driver
+ **********************************************************************************************/
 
+/*
+ * Peripheral clock configuration
+ */
+void GPIO_PeriClockControl(GPIO_RegDef_t *pGPIOx, uint8_t EnorDi);
 
+/*
+ * Init and De-Init
+ */
+void GPIO_Init(GPIO_Handle_t *pGPIOHandle);
+void GPIO_DeInit(GPIO_RegDef_t *pGPIOx); 	/*Use reset register to reset the GPIO port */
 
+/*
+ * Data read and write
+ */
+uint8_t GPIO_ReadFromInputPin(GPIO_RegDef_t *pGPIOx, uint8_t PinNumber);
+uint16_t GPIO_ReadFromInputPort(GPIO_RegDef_t *pGPIOx);
+void GPIO_WriteToInputPin(GPIO_RegDef_t *pGPIOx, uint8_t pinNumber, uint8_t Value);
+void GPIO_WriteToInputPort(GPIO_RegDef_t *pGPIOx, uint16_t Value);
+void GPIO_ToggleOutputPin(GPIO_RegDef_t *pGPIOx, uint8_t PinNumber);
+
+/*
+ * IRQ (Interrupt Request) Configuration and ISR (interrupt service routine) handling
+ */
+void GPIO_IRQConfig(uint8_t IRQNumber, uint8_t IRQPriority, uint8_t EnorDi);
+void GPIO_IRQHandling(uint8_t PinNumber);
 
 #endif /* INC_STM32F446XX_GPIO_H_ */
