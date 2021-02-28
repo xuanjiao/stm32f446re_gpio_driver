@@ -202,10 +202,10 @@ void GPIO_WriteToOutputPin(GPIO_RegDef_t *pGPIOx, uint8_t PinNumber, uint8_t Val
 {
 	if(Value == GPIO_PIN_SET)
 	{
-		pGPIOx->IDR |= ( 0x1 << PinNumber);
+		pGPIOx->ODR |= ( 0x1 << PinNumber);
 	}else
 	{
-		pGPIOx->IDR &= ~( 0x1 << PinNumber);
+		pGPIOx->ODR &= ~( 0x1 << PinNumber);
 	}
 }
 
@@ -223,7 +223,7 @@ void GPIO_WriteToOutputPin(GPIO_RegDef_t *pGPIOx, uint8_t PinNumber, uint8_t Val
  */
 void GPIO_WriteToOutputPort(GPIO_RegDef_t *pGPIOx, uint16_t Value)
 {
-	pGPIOx->IDR &= Value;
+	pGPIOx->ODR &= Value;
 }
 
 /*********************************************************************
