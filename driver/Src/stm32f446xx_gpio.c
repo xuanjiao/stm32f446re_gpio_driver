@@ -80,27 +80,58 @@ void GPIO_Init(GPIO_Handle_t *pGPIOHandle){
 	uint32_t temp = 0; // Store the configuration data
 
 	// Configure the pin mode
-	if(pGPIOHandle->GPIO_PinConfig.GPIO_PinMode < GPIO_MODE_ANALOG){
+	if(pGPIOHandle->GPIO_PinConfig.GPIO_PinMode < GPIO_MODE_ANALOG)
+	{
 		temp = pGPIOHandle->GPIO_PinConfig.GPIO_PinMode << (2 * pGPIOHandle->GPIO_PinConfig.GPIO_PinNumber);
-		pGPIOHandle->pGPIOx->MODE &= ~( 0x3 << 2 * pGPIOHandle->GPIO_PinConfig.GPIO_PinNumber); // Clear the pin x configuration bit
+		pGPIOHandle->pGPIOx->MODE &= ~( 0x3 << 2 * pGPIOHandle->GPIO_PinConfig.GPIO_PinNumber); // Clear the current value
 		pGPIOHandle->pGPIOx->MODE |= temp;	// Setting
-	}else{
+	}else
+	{
+		// Interrupt rising edge and falling edge setting
+		if(pGPIOHandle->GPIO_PinConfig.GPIO_PinMode == GPIO_MODE_IT_RT)
+		{
+			EXTI->EXTI_RTSR |= ( 1 << pGPIOHandle->GPIO_PinConfig.GPIO_PinNumber); // Rising trigger enable
+			EXTI->EXTI_FTSR &= ~( 1 << pGPIOHandle->GPIO_PinConfig.GPIO_PinNumber);	// Falling trigger disable
+		}else if (pGPIOHandle->GPIO_PinConfig.GPIO_PinMode == GPIO_MODE_IT_FT)
+		{
+			EXTI->EXTI_RTSR &= ~(  1 << pGPIOHandle->GPIO_PinConfig.GPIO_PinNumber); // Rising trigger disable
+			EXTI->EXTI_FTSR |= ( 1 << pGPIOHandle->GPIO_PinConfig.GPIO_PinNumber);	// Falling trigger enable
+		}else if (pGPIOHandle->GPIO_PinConfig.GPIO_PinMode == GPIO_MODE_IT_RFT)
+		{
+			EXTI->EXTI_RTSR |= ( 1 << pGPIOHandle->GPIO_PinConfig.GPIO_PinNumber); // Rising trigger enable
+			EXTI->EXTI_FTSR |= ( 1 << pGPIOHandle->GPIO_PinConfig.GPIO_PinNumber);	// Falling trigger enable
+		}
+
+
+		// Configure GPIO port selection in SYSCFG
+		SYSCFG_PCLK_EN();
+
+		uint8_t temp1,temp2,port_code;
+		temp1 = pGPIOHandle->GPIO_PinConfig.GPIO_PinNumber / 4;
+		temp2 = pGPIOHandle->GPIO_PinConfig.GPIO_PinNumber % 4;
+
+		port_code = GPIO_BASEADDR_TO_CODE(GPIOA);
+		SYSCFG->SYSCFG_EXTICR[temp1] &= ~( 0xF << 4 * temp2 );	// Clear the current value
+		SYSCFG->SYSCFG_EXTICR[temp1] |= ( port_code << 4 * temp2);
+
+		// Enable interrupt on pin using IMR (Interrupt mask register)
+		EXTI->EXTI_IMR |= ( 1 << pGPIOHandle->GPIO_PinConfig.GPIO_PinNumber);
 
 	}
 
 	// Configure the pin speed
 	temp = pGPIOHandle->GPIO_PinConfig.GPIO_PinSpeed << (2 * pGPIOHandle->GPIO_PinConfig.GPIO_PinNumber);
-	pGPIOHandle->pGPIOx->OSPEEDER &= ~( 0x3 << 2 * pGPIOHandle->GPIO_PinConfig.GPIO_PinSpeed); // Clear the pin x configuration bit
+	pGPIOHandle->pGPIOx->OSPEEDER &= ~( 0x3 << 2 * pGPIOHandle->GPIO_PinConfig.GPIO_PinSpeed); // Clear the current value
 	pGPIOHandle->pGPIOx->OSPEEDER |= temp;	// Setting
 
 	// Configure the pin pull-down/pull-up resistor
 	temp = pGPIOHandle->GPIO_PinConfig.GPIO_PinPuPdControl << (2 * pGPIOHandle->GPIO_PinConfig.GPIO_PinNumber);
-	pGPIOHandle->pGPIOx->PUPDR &= ~( 0x3 << 2 * pGPIOHandle->GPIO_PinConfig.GPIO_PinNumber); // Clear the pin x configuration bit
+	pGPIOHandle->pGPIOx->PUPDR &= ~( 0x3 << 2 * pGPIOHandle->GPIO_PinConfig.GPIO_PinNumber); // Clear the current value
 	pGPIOHandle->pGPIOx->PUPDR |= temp;		// Setting
 
 	// Configure the pin output type
 	temp = pGPIOHandle->GPIO_PinConfig.GPIO_PinOPType << (2 * pGPIOHandle->GPIO_PinConfig.GPIO_PinNumber);
-	pGPIOHandle->pGPIOx->OTYPER &= ~( 0x1 << 2 * pGPIOHandle->GPIO_PinConfig.GPIO_PinNumber); // Clear the pin x configuration bit
+	pGPIOHandle->pGPIOx->OTYPER &= ~( 0x1 << 2 * pGPIOHandle->GPIO_PinConfig.GPIO_PinNumber); // Clear the current value
 	pGPIOHandle->pGPIOx->OTYPER |= temp;	// Setting
 
 	// Configure the pin alternate function selection when the pin mode is alternate function mode.
@@ -109,7 +140,7 @@ void GPIO_Init(GPIO_Handle_t *pGPIOHandle){
 		uint8_t temp1, temp2;
 		temp1 = pGPIOHandle->GPIO_PinConfig.GPIO_PinNumber / 8;		// Select from alternate function low register or alternate function high register
 		temp2 = pGPIOHandle->GPIO_PinConfig.GPIO_PinNumber % 8; 	// Select the pin x configuration bits
-		pGPIOHandle->pGPIOx->AFR[temp1] &= ~(0xF << (4 * temp2 ));		// Clear the pin x configuration bit
+		pGPIOHandle->pGPIOx->AFR[temp1] &= ~(0xF << (4 * temp2 ));		// Clear the current value
 		temp  = pGPIOHandle->GPIO_PinConfig.GPIO_PinAltFunMode << ( 4 * temp2 );
 		pGPIOHandle->pGPIOx->PUPDR |= temp;		// Setting
 	}
@@ -248,6 +279,22 @@ void GPIO_ToggleOutputPin(GPIO_RegDef_t *pGPIOx, uint8_t PinNumber)
  */
 
 /*********************************************************************
+ * @fn      		  - GPIO_IRQInterrputConfig
+ *
+ * @brief             - This function enable the interrupt in processor's perspective
+ *
+ * @param[in]         -	the IRQ number
+ * @param[in]         - ENABLE or DISABLE macros
+ *
+ * @return            -  none
+ *
+ * @Note              -  none
+ */
+void GPIO_IRQInterrputConfig(uint8_t IRQNumber, uint8_t EnorDi){
+
+}
+
+/*********************************************************************
  * @fn      		  -
  *
  * @brief             -
@@ -260,7 +307,8 @@ void GPIO_ToggleOutputPin(GPIO_RegDef_t *pGPIOx, uint8_t PinNumber)
  *
  * @Note              -  none
  */
-void GPIO_IRQConfig(uint8_t IRQNumber, uint8_t IRQPriority, uint8_t EnorDi){
+
+void GPIO_IRQPriorityConfig(uint8_t IRQNumber, uint8_t IRQPriority){
 
 }
 

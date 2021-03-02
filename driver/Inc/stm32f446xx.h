@@ -12,6 +12,42 @@
 
 #define __vo volatile
 
+/**********************************START:Processor Specific Details **********************************/
+/*
+ * ARM Cortex M4 Processor NVIC ISERx register (Interrupt Set-pending Registers) Addresses
+ */
+#define NVIC_ISER0							(uint32_t*)0xE000E100
+#define NVIC_ISER1							(uint32_t*)0xE000E104
+#define NVIC_ISER2							(uint32_t*)0xE000E108
+#define NVIC_ISER3							(uint32_t*)0xE000E10C
+#define NVIC_ISER4							(uint32_t*)0xE000E110
+#define NVIC_ISER5							(uint32_t*)0xE000E114
+#define NVIC_ISER6							(uint32_t*)0xE000E118
+#define NVIC_ISER7							(uint32_t*)0xE000E11C
+
+/*
+ * ARM Cortex M4 Processor NVIC ICERx register (Interrupt Clear-pending Registers) Addresses
+ */
+#define NVIC_ICER0							(uint32_t*)0xE000E180
+#define NVIC_ICER1							(uint32_t*)0xE000E184
+#define NVIC_ICER2							(uint32_t*)0xE000E188
+#define NVIC_ICER3							(uint32_t*)0xE000E18C
+#define NVIC_ICER4							(uint32_t*)0xE000E190
+#define NVIC_ICER5							(uint32_t*)0xE000E194
+#define NVIC_ICER6							(uint32_t*)0xE000E198
+#define NVIC_ICER7							(uint32_t*)0xE000E19C
+
+/*
+ * ARM Cortex M4 Processor NVIC IPRx register (Interrupt Priority Registers) Base Addresses
+ */
+#define NVIC_IPR_BASEADDR					uint32_t*)0xE000E400
+
+/*
+ * ARM Cortex M4 Processor number of priority bits implemented in Priority Register
+ * (non-implemented low-order bits read as zero and ignore writes)
+ */
+#define NO_PR_BITS_IMPLEMENTED  			4
+
 /*
  * Base addresses of MCU's embedded memories
  */
@@ -84,8 +120,6 @@ typedef struct
 	__vo uint32_t AFR[2];					/* AFR[0]: GPIO port alternate function low register, AFR[1]: GPIO port alternate function high register Address offset: 0x20-0x24*/
 }GPIO_RegDef_t;
 
-
-
 typedef struct
 {
 	__vo uint32_t CR;						/* RCC clock control register						Address offset: 0x00 */
@@ -124,6 +158,26 @@ typedef struct
 	__vo uint32_t DCKCFGR2;					/* RCC dedicated clocks configuration register 2	Address offset: 0x94 */
 }RCC_RegDef_t;
 
+
+typedef struct{
+	__vo uint32_t EXTI_IMR;					/* Interrupt mask register							Address offset: 0x00 */
+	__vo uint32_t EXTI_EMR;					/* Event mask register								Address offset: 0x04 */
+	__vo uint32_t EXTI_RTSR;				/* Rising trigger selection register				Address offset: 0x08 */
+	__vo uint32_t EXTI_FTSR;				/* Falling trigger selection register				Address offset: 0x0C */
+	__vo uint32_t EXTI_SWIER;				/* Software interrupt event register 				Address offset: 0x10 */
+	__vo uint32_t EXTI_PR;					/* Pending register									Address offset: 0x14 */
+}EXTI_RegDef_t;
+
+typedef struct{
+	__vo uint32_t SYSCFG_MEMRMP;		/* SYSCFG memory remap register							Address offset: 0x00 */
+	__vo uint32_t SYSCFG_PMC;			/* SYSCFG peripheral mode configuration register		Address offset: 0x04 */
+	__vo uint32_t SYSCFG_EXTICR[4];		/* SYSCFG external interrupt configuration register 1-4	Address offset: 0x08-0x14 */
+	uint32_t RESERVED0[2];
+	__vo uint32_t SYSCFG_CMPCR;			/* Compensation cell control register					Address offset: 0x20 */
+	uint32_t RESERVED1[2];
+	__vo uint32_t SYSCFG_CFGR;			/* SYSCFG configuration register						Address offset: 0x2C */
+}SYSCFG_RegDef_t;
+
 /*
  * Peripheral definition
  */
@@ -137,6 +191,9 @@ typedef struct
 #define GPIOH								((GPIO_RegDef_t*)GPIOH_BASEADDR)
 
 #define RCC									((RCC_RegDef_t*)RCC_BASEADDR)
+
+#define EXTI								((EXTI_RegDef_t*)EXTI_BASEADDR)
+#define SYSCFG								((SYSCFG_RegDef_t*)SYSCFG_BASEADDR)
 
 /*
  * Peripheral enable and disable Macros
@@ -238,6 +295,19 @@ typedef struct
 #define GPIOF_REG_RESET()					do{ RCC->AHB1RSTR |= ( 1<<5); RCC->AHB1RSTR &= ~( 1<<5);} while(0)
 #define GPIOG_REG_RESET()					do{ RCC->AHB1RSTR |= ( 1<<6); RCC->AHB1RSTR &= ~( 1<<6);} while(0)
 #define GPIOH_REG_RESET()					do{ RCC->AHB1RSTR |= ( 1<<7); RCC->AHB1RSTR &= ~( 1<<7);} while(0)
+
+/*
+ * Convert GPIO Port base address to code
+ */
+#define GPIO_BASEADDR_TO_CODE(x)			( ( x == GPIOA )? 0: \
+											  ( x == GPIOB )? 1: \
+											  ( x == GPIOC )? 2: \
+											  ( x == GPIOD )? 3: \
+											  ( x == GPIOE )? 4: \
+											  ( x == GPIOF )? 5: \
+											  ( x == GPIOG )? 6: \
+											  ( x == GPIOH )? 7:0 )
+
 
 /*
  * Some general Macros
