@@ -309,7 +309,7 @@ void GPIO_IRQInterrputConfig(uint8_t IRQNumber, uint8_t EnorDi){
  */
 
 void GPIO_IRQPriorityConfig(uint8_t IRQNumber, uint8_t IRQPriority){
-
+	// STM32F446xx has in total 103 interrupts
 }
 
 /*********************************************************************
