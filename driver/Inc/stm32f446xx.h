@@ -16,31 +16,24 @@
 /*
  * ARM Cortex M4 Processor NVIC ISERx register (Interrupt Set-pending Registers) Addresses
  */
-#define NVIC_ISER0							(uint32_t*)0xE000E100
-#define NVIC_ISER1							(uint32_t*)0xE000E104
-#define NVIC_ISER2							(uint32_t*)0xE000E108
-#define NVIC_ISER3							(uint32_t*)0xE000E10C
-#define NVIC_ISER4							(uint32_t*)0xE000E110
-#define NVIC_ISER5							(uint32_t*)0xE000E114
-#define NVIC_ISER6							(uint32_t*)0xE000E118
-#define NVIC_ISER7							(uint32_t*)0xE000E11C
+#define NVIC_ISER0							((__vo uint32_t*)0xE000E100)
+#define NVIC_ISER1							((__vo uint32_t*)0xE000E104)
+#define NVIC_ISER2							((__vo uint32_t*)0xE000E108)
+#define NVIC_ISER3							((__vo uint32_t*)0xE000E10C)
+
 
 /*
  * ARM Cortex M4 Processor NVIC ICERx register (Interrupt Clear-pending Registers) Addresses
  */
-#define NVIC_ICER0							(uint32_t*)0xE000E180
-#define NVIC_ICER1							(uint32_t*)0xE000E184
-#define NVIC_ICER2							(uint32_t*)0xE000E188
-#define NVIC_ICER3							(uint32_t*)0xE000E18C
-#define NVIC_ICER4							(uint32_t*)0xE000E190
-#define NVIC_ICER5							(uint32_t*)0xE000E194
-#define NVIC_ICER6							(uint32_t*)0xE000E198
-#define NVIC_ICER7							(uint32_t*)0xE000E19C
+#define NVIC_ICER0							((__vo uint32_t*)0xE000E180)
+#define NVIC_ICER1							((__vo uint32_t*)0xE000E184)
+#define NVIC_ICER2							((__vo uint32_t*)0xE000E188)
+#define NVIC_ICER3							((__vo uint32_t*)0xE000E18C)
 
 /*
  * ARM Cortex M4 Processor NVIC IPRx register (Interrupt Priority Registers) Base Addresses
  */
-#define NVIC_IPR_BASEADDR					uint32_t*)0xE000E400
+#define NVIC_IPR_BASEADDR					((__vo uint32_t*)0xE000E400)
 
 /*
  * ARM Cortex M4 Processor number of priority bits implemented in Priority Register
@@ -51,10 +44,10 @@
 /*
  * Base addresses of MCU's embedded memories
  */
-#define FLASH_BASEADDR						(uint32_t)0x08000000	/* Base address of flash */
-#define SRAM1_BASEADDR						(uint32_t)0x20000000	/* Base address of SRAM1 */
-#define	SRAM2_BASEADDR						(uint32_t)0x2001C000	/* Base address of SRAM2 */
-#define ROM									(uint32_t)0x1FFF0000    /* Base address of System memory */
+#define FLASH_BASEADDR						((uint32_t)0x08000000)	/* Base address of flash */
+#define SRAM1_BASEADDR						((uint32_t)0x20000000)	/* Base address of SRAM1 */
+#define	SRAM2_BASEADDR						((uint32_t)0x2001C000)	/* Base address of SRAM2 */
+#define ROM									((uint32_t)0x1FFF0000)    /* Base address of System memory */
 #define SRAM								SRAM1_BASEADDR			/* SRAM consists of SRAM1 and SRAM2*/
 
 /*
@@ -62,10 +55,10 @@
  * AHB bus is used for peripherals which need high speed data communication.
  * APB bus is used for peripherals capable of low speed data communication.
  */
-#define APB1PERIPH_BASE						(uint32_t)0x40000000	/* Base address of APB1 bus */
-#define APB2PERIPH_BASE						(uint32_t)0x40010000	/* Base address of APB2 bus */
-#define AHB1PERIPH_BASE						(uint32_t)0x40020000	/* Base address of AHB1 bus */
-#define AHB2PERIPH_BASE						(uint32_t)0x50000000	/* Base address of AHB2 bus */
+#define APB1PERIPH_BASE						((uint32_t)0x40000000)	/* Base address of APB1 bus */
+#define APB2PERIPH_BASE						((uint32_t)0x40010000)	/* Base address of APB2 bus */
+#define AHB1PERIPH_BASE						((uint32_t)0x40020000)	/* Base address of AHB1 bus */
+#define AHB2PERIPH_BASE						((uint32_t)0x50000000)	/* Base address of AHB2 bus */
 
 /*
  * Base addresses of peripherals which are hanging on AHB1 bus
@@ -307,6 +300,51 @@ typedef struct{
 											  ( x == GPIOF )? 5: \
 											  ( x == GPIOG )? 6: \
 											  ( x == GPIOH )? 7:0 )
+
+/*
+ * IRQ(Interrupt Request) Numbers of STM32F446x MCU
+ */
+
+#define IRQ_NO_EXTI0 		6
+#define IRQ_NO_EXTI1 		7
+#define IRQ_NO_EXTI2 		8
+#define IRQ_NO_EXTI3 		9
+#define IRQ_NO_EXTI4 		10
+#define IRQ_NO_EXTI9_5 		23
+#define IRQ_NO_EXTI15_10 	40
+#define IRQ_NO_SPI1			35
+#define IRQ_NO_SPI2         36
+#define IRQ_NO_SPI3         51
+#define IRQ_NO_SPI4
+#define IRQ_NO_I2C1_EV     31
+#define IRQ_NO_I2C1_ER     32
+#define IRQ_NO_USART1	    37
+#define IRQ_NO_USART2	    38
+#define IRQ_NO_USART3	    39
+#define IRQ_NO_UART4	    52
+#define IRQ_NO_UART5	    53
+#define IRQ_NO_USART6	    71
+
+
+/*
+ * 　Macros for all the possible priority levels
+ */
+#define NVIC_IRQ_PRI0    	0
+#define NVIC_IRQ_PRI1    	0
+#define NVIC_IRQ_PRI2    	0
+#define NVIC_IRQ_PRI3   	0
+#define NVIC_IRQ_PRI4    	0
+#define NVIC_IRQ_PRI5    	0
+#define NVIC_IRQ_PRI6    	0
+#define NVIC_IRQ_PRI7    	0
+#define NVIC_IRQ_PRI8    	0
+#define NVIC_IRQ_PRI9    	0
+#define NVIC_IRQ_PRI10    	0
+#define NVIC_IRQ_PRI11    	0
+#define NVIC_IRQ_PRI12    	0
+#define NVIC_IRQ_PRI13    	0
+#define NVIC_IRQ_PRI14    	0
+#define NVIC_IRQ_PRI15    	15
 
 
 /*

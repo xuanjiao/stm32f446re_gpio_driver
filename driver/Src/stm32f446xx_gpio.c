@@ -291,17 +291,54 @@ void GPIO_ToggleOutputPin(GPIO_RegDef_t *pGPIOx, uint8_t PinNumber)
  * @Note              -  none
  */
 void GPIO_IRQInterrputConfig(uint8_t IRQNumber, uint8_t EnorDi){
+	if( EnorDi == ENABLE)
+	{
+		if( IRQNumber < 32)
+		{
+			*NVIC_ISER0 |= ( 1 << IRQNumber);
 
+		}else if (IRQNumber >= 32 && IRQNumber < 64)
+		{
+			*NVIC_ISER1 |= ( 1 << IRQNumber % 32);
+
+		}else if (IRQNumber >= 64 && IRQNumber < 96)
+		{
+			*NVIC_ISER2 |= ( 1 << IRQNumber % 64);
+
+		}else if (IRQNumber >= 96 && IRQNumber < 128)
+		{
+			*NVIC_ISER3 |= ( 1 << IRQNumber % 96);
+
+		}else{}
+	}else
+	{
+		if( IRQNumber < 32)
+		{
+			*NVIC_ISER0 |= ( 1 << IRQNumber);
+
+		}else if (IRQNumber >= 32 && IRQNumber < 64)
+		{
+			*NVIC_ISER1 |= ( 1 << IRQNumber % 32);
+
+		}else if (IRQNumber >= 64 && IRQNumber < 96)
+		{
+			*NVIC_ISER2 |= ( 1 << IRQNumber % 64);
+
+		}else if (IRQNumber >= 96 && IRQNumber < 128)
+		{
+			*NVIC_ISER3 |= ( 1 << IRQNumber % 96);
+
+		}else{}
+	}
 }
 
 /*********************************************************************
- * @fn      		  -
+ * @fn      		  - GPIO_IRQPriorityConfig
  *
- * @brief             -
+ * @brief             - This function configure the IRQ Priority
  *
- * @param[in]         -
- * @param[in]         -
- * @param[in]         -
+ * @param[in]         - the IRQ number
+ * @param[in]         - the IRQ priority
  *
  * @return            -  none
  *
@@ -309,17 +346,21 @@ void GPIO_IRQInterrputConfig(uint8_t IRQNumber, uint8_t EnorDi){
  */
 
 void GPIO_IRQPriorityConfig(uint8_t IRQNumber, uint8_t IRQPriority){
-	// STM32F446xx has in total 103 interrupts
+	uint8_t temp1, temp2;
+
+	// Find out the IPR (Interrupt Priority Registers)
+	temp1 = IRQPriority / 4;
+	temp2 = IRQPriority % 4;
+
+	*(NVIC_IPR_BASEADDR + temp1) |= IRQPriority <<  (8 * temp2 + 8 - NO_PR_BITS_IMPLEMENTED);
 }
 
 /*********************************************************************
- * @fn      		  -
+ * @fn      		  - GPIO_IRQHandling
  *
- * @brief             -
+ * @brief             - This function clear the corresponding bit in EXTI pending register
  *
- * @param[in]         -
- * @param[in]         -
- * @param[in]         -
+ * @param[in]         - the pin number
  *
  * @return            -  none
  *
@@ -327,6 +368,10 @@ void GPIO_IRQPriorityConfig(uint8_t IRQNumber, uint8_t IRQPriority){
  */
 void GPIO_IRQHandling(uint8_t PinNumber){
 
+	if( EXTI->EXTI_PR & ( 1 << PinNumber) ) // Check if the corresponding bit in the pending register is set
+	{
+		EXTI->EXTI_PR |= ( 1 << PinNumber); // Clear the EXTI pending register bit
+	}
 }
 
 
