@@ -349,8 +349,8 @@ void GPIO_IRQPriorityConfig(uint8_t IRQNumber, uint8_t IRQPriority){
 	uint8_t temp1, temp2;
 
 	// Find out the IPR (Interrupt Priority Registers)
-	temp1 = IRQPriority / 4;
-	temp2 = IRQPriority % 4;
+	temp1 = IRQNumber / 4;
+	temp2 = IRQNumber % 4;
 
 	*(NVIC_IPR_BASEADDR + temp1) |= IRQPriority <<  (8 * temp2 + 8 - NO_PR_BITS_IMPLEMENTED);
 }
