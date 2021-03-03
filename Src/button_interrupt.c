@@ -43,7 +43,7 @@ int main()
 	// Button1 is connected to PC13
 	gpio_btn.pGPIOx = GPIOC;
 	gpio_btn.GPIO_PinConfig.GPIO_PinNumber = GPIO_PIN_NO_13;
-	gpio_btn.GPIO_PinConfig.GPIO_PinMode = GPIO_MODE_IT_FT; // problem here gpio c mode13 0
+	gpio_btn.GPIO_PinConfig.GPIO_PinMode = GPIO_MODE_IT_FT;
 	gpio_btn.GPIO_PinConfig.GPIO_PinOPType = GPIO_OUT_TYPE_PP;
 	gpio_btn.GPIO_PinConfig.GPIO_PinPuPdControl = GPIO_PIN_NO_PU_PD;
 	gpio_btn.GPIO_PinConfig.GPIO_PinSpeed = GPIO_SPEED_HIGH;

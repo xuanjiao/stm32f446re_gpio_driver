@@ -110,7 +110,7 @@ void GPIO_Init(GPIO_Handle_t *pGPIOHandle){
 		temp1 = pGPIOHandle->GPIO_PinConfig.GPIO_PinNumber / 4;
 		temp2 = pGPIOHandle->GPIO_PinConfig.GPIO_PinNumber % 4;
 
-		port_code = GPIO_BASEADDR_TO_CODE(GPIOA);
+		port_code = GPIO_BASEADDR_TO_CODE(pGPIOHandle->pGPIOx);
 		SYSCFG->SYSCFG_EXTICR[temp1] &= ~( 0xF << 4 * temp2 );	// Clear the current value
 		SYSCFG->SYSCFG_EXTICR[temp1] |= ( port_code << 4 * temp2);
 
