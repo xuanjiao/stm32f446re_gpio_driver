@@ -290,7 +290,8 @@ void GPIO_ToggleOutputPin(GPIO_RegDef_t *pGPIOx, uint8_t PinNumber)
  *
  * @Note              -  none
  */
-void GPIO_IRQInterrputConfig(uint8_t IRQNumber, uint8_t EnorDi){
+void GPIO_IRQInterrputConfig(uint8_t IRQNumber, uint8_t EnorDi)
+{
 	if( EnorDi == ENABLE)
 	{
 		if( IRQNumber < 32)
@@ -345,7 +346,8 @@ void GPIO_IRQInterrputConfig(uint8_t IRQNumber, uint8_t EnorDi){
  * @Note              -  none
  */
 
-void GPIO_IRQPriorityConfig(uint8_t IRQNumber, uint8_t IRQPriority){
+void GPIO_IRQPriorityConfig(uint8_t IRQNumber, uint8_t IRQPriority)
+{
 	uint8_t temp1, temp2;
 
 	// Find out the IPR (Interrupt Priority Registers)
@@ -366,7 +368,8 @@ void GPIO_IRQPriorityConfig(uint8_t IRQNumber, uint8_t IRQPriority){
  *
  * @Note              -  none
  */
-void GPIO_IRQHandling(uint8_t PinNumber){
+void GPIO_IRQHandling(uint8_t PinNumber)
+{
 
 	if( EXTI->EXTI_PR & ( 1 << PinNumber) ) // Check if the corresponding bit in the pending register is set
 	{
