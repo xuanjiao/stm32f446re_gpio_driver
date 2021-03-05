@@ -110,8 +110,20 @@ typedef struct
 	__vo uint32_t ODR;						/* GPIO port output data register 					Address offset: 0x14 */
 	__vo uint32_t BSRR;						/* GPIO port bit set/reset register					Address offset: 0x18 */
 	__vo uint32_t LCKR;						/* GPIO port port configuration lock register 		Address offset: 0x1C */
-	__vo uint32_t AFR[2];					/* AFR[0]: GPIO port alternate function low register, AFR[1]: GPIO port alternate function high register Address offset: 0x20-0x24*/
+	__vo uint32_t AFR[2];					/* AFR[0]: GPIO port alternate function low register, AFR[1]: GPIO port alternate function high register Address offset: 0x20 - 0x24 */
 }GPIO_RegDef_t;
+
+typedef struct
+{
+	__vo uint32_t CR[2];					/* CR[1]: SPI control register 1, CR[2]: SPI control register 2	Address offset: 0x00 - 0x04 */
+	__vo uint32_t SR;						/* SPI status register								Address offset: 0x08 */
+	__vo uint32_t DR;						/* SPI data register								Address offset: 0x0C */
+	__vo uint32_t CRCPR;					/* SPI CRC polynomial register						Address offset: 0x10 */
+	__vo uint32_t RXCRCR;					/* SPI RX CRC register								Address offset: 0x14 */
+	__vo uint32_t TXCRCR;					/* SPI TX CRC register								Address offset: 0x18 */
+	__vo uint32_t I2SCFGR;					/* SPI_I2S configuration register					Address offset: 0x1C */
+	__vo uint32_t I2SPR;					/* SPI_I2S prescaler register						Address offset: 0x20 */
+}SPI_RegDef_t;
 
 typedef struct
 {
@@ -182,6 +194,10 @@ typedef struct{
 #define GPIOF								((GPIO_RegDef_t*)GPIOF_BASEADDR)
 #define GPIOG								((GPIO_RegDef_t*)GPIOG_BASEADDR)
 #define GPIOH								((GPIO_RegDef_t*)GPIOH_BASEADDR)
+
+#define SPI1								((SPI_RegDef_t*)SPI1_BASEADDR)
+#define SPI2								((SPI_RegDef_t*)SPI2_BASEADDR)
+#define SPI3								((SPI_RegDef_t*)SPI3_BASEADDR)
 
 #define RCC									((RCC_RegDef_t*)RCC_BASEADDR)
 
