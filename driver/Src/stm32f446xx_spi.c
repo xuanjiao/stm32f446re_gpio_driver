@@ -65,11 +65,14 @@ void SPI_PeriClockControl(SPI_RegDef_t *pSPIx, uint8_t EnorDi)
  */
 void SPI_Init(SPI_Handle_t *pSPIHandle)
 {
+	// Enable the SPI peripheral Control
+	SPI_PeriClockControl(pSPIHandle->pSPIx, ENABLE);
+
 	// Set SPI control register
 	uint32_t tempreg  = 0;
 
 	// Configure the device mode
-	tempreg |= ( pSPIHandle->SPIConfig.SPI_DeviceMode << 2);
+	tempreg |= ( pSPIHandle->SPIConfig.SPI_DeviceMode << SPI_CR1_MSTR);
 
 	// Configure the SPI bus
 	if( pSPIHandle->SPIConfig.SPI_BusConfig == SPI_BUS_CONFIG_FD)
@@ -123,7 +126,7 @@ void SPI_DeInit(SPI_RegDef_t *pSPIx)
 		SPI2_REG_RESET();
 	else if (pSPIx == SPI3)
 		SPI3_REG_RESET();
-	else if (pSPIx =0 SPI4)
+	else if (pSPIx == SPI4)
 		SPI4_REG_RESET();
 }
 
@@ -141,8 +144,9 @@ void SPI_DeInit(SPI_RegDef_t *pSPIx)
  *
  * @Note              - none
  */
-void SPI_ReceiveData(SPI_RegDef_t *pSPI,uint8_t *pRxffer,uint32_t Len)
+void SPI_ReceiveData(SPI_RegDef_t *pSPIx,uint8_t *pRxffer,uint32_t Len)
 {
+
 
 }
 
@@ -157,11 +161,28 @@ void SPI_ReceiveData(SPI_RegDef_t *pSPI,uint8_t *pRxffer,uint32_t Len)
  *
  * @return            - none
  *
- * @Note              - none
+ * @Note              - This is blocking call
  */
-void SPI_SendData(SPI_RegDef_t *pSPI,uint8_t *pTxffer,uint32_t Len)
+void SPI_SendData(SPI_RegDef_t *pSPIx,uint8_t *pTxffer,uint32_t Len)
 {
+	while(Len > 0)
+	{
+		while( SPI_GetFlagStatus(pSPIx, SPI_TXE_FLAG) == FLAG_RESET ); // Wait until the Tx buffer is empty.
 
+		if (pSPIx->CR1 & (1 << SPI_CR1_DFF))
+		{
+			// 16 bit
+			pSPIx->DR = *((uint16_t*)pTxffer);
+			Len -= 2;
+			(uint16_t*)pTxffer++;
+		}else
+		{
+			// 8 bit
+			pSPIx->DR = *pTxffer;
+			Len--;
+			pTxffer++;
+		}
+	}
 }
 
 
@@ -213,5 +234,80 @@ void SPI_IRQPriorityConfig(uint8_t IRQNumber, uint8_t IRQPriority)
 void SPI_IRQHandling(SPI_Handle_t *pSPIHandle)
 {
 
+}
+
+/*********************************************************************
+ * @fn      		  - SPI_PeriphralControl
+ *
+ * @brief             - This function enable or disable the SPI peripheral
+ *
+ * @param[in]         - the pin number
+ *
+ * @return            -  none
+ *
+ * @Note              -  none
+ */
+void SPI_PeripheralControl(SPI_RegDef_t *pSPIx, uint8_t EnorDi)
+{
+	if( EnorDi == ENABLE)
+	{
+		pSPIx->CR1 |= ( 1 << SPI_CR1_SPE);
+	}else
+	{
+		pSPIx->CR1 &= ~( 1 << SPI_CR1_SPE);
+	}
+}
+
+/*********************************************************************
+ * @fn      		  - SPI_SSIConfig
+ *
+ * @brief             - This function enable or disable the SPI internal slave select. The value is forced onto the NSS pin
+ *
+ * @param[in]         - the pin number
+ *
+ * @return            -  none
+ *
+ * @Note              -  none
+ */
+void SPI_SSIConfig(SPI_RegDef_t *pSPIx, uint8_t EnorDi)
+{
+	if ( EnorDi == ENABLE )
+	{
+		pSPIx->CR1 |= ( 1 << SPI_CR1_SSI);
+	}else
+	{
+		pSPIx->CR1 &= ~( 1 << SPI_CR1_SSI);
+	}
+}
+
+/*********************************************************************
+ * @fn      		  - SPI_SSOEConfig
+ *
+ * @brief             - This function enable or disable the SSOE
+ *
+ * @param[in]         - the pin number
+ *
+ * @return            -  none
+ *
+ * @Note              -  none
+ */
+void SPI_SSOEConfig(SPI_RegDef_t *pSPIx, uint8_t EnorDi)
+{
+	if ( EnorDi == ENABLE )
+	{
+		pSPIx->CR2 |= ( 1 << SPI_CR2_SSOE);
+	}else
+	{
+		pSPIx->CR2 &= ~( 1 << SPI_CR2_SSOE);
+	}
+}
+
+uint8_t SPI_GetFlagStatus(SPI_RegDef_t *pSPIx , uint32_t FlagName)
+{
+	if(pSPIx->SR & FlagName)
+	{
+		return FLAG_SET;
+	}
+	return FLAG_RESET;
 }
 

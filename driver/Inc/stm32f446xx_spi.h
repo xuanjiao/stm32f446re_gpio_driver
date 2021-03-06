@@ -35,8 +35,8 @@ typedef struct
 /*
  * @SPI_DeviceMode
  */
-#define SPI_DEV_MODE_MASTER		0
-#define SPI_DEV_MODE_SLAVE		1
+#define SPI_DEV_MODE_SLAVE		0
+#define SPI_DEV_MODE_MASTER		1
 
 /*
  * @SPI_BusConfig
@@ -78,8 +78,15 @@ typedef struct
 /*
  * @SPI_SSM
  */
-#define SPI_SSM_DISABLE		0
-#define SPI_SSM_ENABLE		1
+#define SPI_SSM_DI		0
+#define SPI_SSM_EN		1
+
+/*
+ * SPI related status flags definitions
+ */
+#define SPI_TXE_FLAG    ( 1 << SPI_SR_TXE)
+#define SPI_RXNE_FLAG   ( 1 << SPI_SR_RXNE)
+#define SPI_BUSY_FLAG   ( 1 << SPI_SR_BSY)
 
 /**********************************************************************************************
  *								 APIs supported by this driver
@@ -96,13 +103,11 @@ void SPI_PeriClockControl(SPI_RegDef_t *pSPIx, uint8_t EnorDi);
 void SPI_Init(SPI_Handle_t *pSPIHandle);
 void SPI_DeInit(SPI_RegDef_t *pSPIx);
 
-
 /*
  * Data read and write
  */
 void SPI_ReceiveData(SPI_RegDef_t *pSPI,uint8_t *pRxffer,uint32_t Len);
 void SPI_SendData(SPI_RegDef_t *pSPI,uint8_t *pTxffer,uint32_t Len);
-
 
 /*
  * IRQ (Interrupt Request) Configuration and ISR (interrupt service routine) handling
@@ -110,5 +115,25 @@ void SPI_SendData(SPI_RegDef_t *pSPI,uint8_t *pTxffer,uint32_t Len);
 void SPI_IRQInterrputConfig(uint8_t IRQNumber, uint8_t EnorDi);
 void SPI_IRQPriorityConfig(uint8_t IRQNumber, uint8_t IRQPriority);
 void SPI_IRQHandling(SPI_Handle_t *pSPIHandle);
+
+/*
+ * Enable or disable SPI peripheral
+ */
+void SPI_PeripheralControl(SPI_RegDef_t *pSPIx, uint8_t EnorDi);
+
+/*
+ * Configure internal slave select bit (SSI)
+ */
+void SPI_SSIConfig(SPI_RegDef_t *pSPIx, uint8_t EnorDi);
+
+/*
+ * Configure the SSOE bit
+ */
+void SPI_SSOEConfig(SPI_RegDef_t *pSPIx, uint8_t EnorDi);
+
+/*
+ * Get SPI status
+ */
+uint8_t SPI_GetFlagStatus(SPI_RegDef_t *pSPIx , uint32_t FlagName);
 
 #endif /* INC_STM32F446XX_SPI_H_ */
