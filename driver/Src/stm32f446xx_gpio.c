@@ -77,6 +77,9 @@ void GPIO_PeriClockControl(GPIO_RegDef_t *pGPIOx, uint8_t EnorDi){
  */
 void GPIO_Init(GPIO_Handle_t *pGPIOHandle){
 
+	// Enable the GPIO peripheral clock
+	GPIO_PeriClockControl(pGPIOHandle->pGPIOx, ENABLE);
+
 	uint32_t temp = 0; // Store the configuration data
 
 	// Configure the pin mode
