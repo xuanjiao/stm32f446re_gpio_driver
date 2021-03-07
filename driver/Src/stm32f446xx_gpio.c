@@ -219,6 +219,7 @@ uint16_t GPIO_ReadFromInputPort(GPIO_RegDef_t *pGPIOx)
 	value = (uint16_t) pGPIOx->IDR;
 	return value;
 }
+
 /*********************************************************************
  * @fn      		  - GPIO_WriteToOutputPin
  *
@@ -277,9 +278,6 @@ void GPIO_ToggleOutputPin(GPIO_RegDef_t *pGPIOx, uint8_t PinNumber)
 	pGPIOx->ODR ^= ( 0x1 << PinNumber);
 }
 
-/*
- * IRQ (Interrupt Request) Configuration and ISR (interrupt service routine) handling
- */
 
 /*********************************************************************
  * @fn      		  - GPIO_IRQInterrputConfig
@@ -318,19 +316,19 @@ void GPIO_IRQInterrputConfig(uint8_t IRQNumber, uint8_t EnorDi)
 	{
 		if( IRQNumber < 32)
 		{
-			*NVIC_ISER0 |= ( 1 << IRQNumber);
+			*NVIC_ICER0 |= ( 1 << IRQNumber);
 
 		}else if (IRQNumber >= 32 && IRQNumber < 64)
 		{
-			*NVIC_ISER1 |= ( 1 << IRQNumber % 32);
+			*NVIC_ICER1 |= ( 1 << IRQNumber % 32);
 
 		}else if (IRQNumber >= 64 && IRQNumber < 96)
 		{
-			*NVIC_ISER2 |= ( 1 << IRQNumber % 64);
+			*NVIC_ICER2 |= ( 1 << IRQNumber % 64);
 
 		}else if (IRQNumber >= 96 && IRQNumber < 128)
 		{
-			*NVIC_ISER3 |= ( 1 << IRQNumber % 96);
+			*NVIC_ICER3 |= ( 1 << IRQNumber % 96);
 
 		}else{}
 	}
