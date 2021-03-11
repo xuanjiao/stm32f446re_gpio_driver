@@ -145,7 +145,7 @@ void GPIO_Init(GPIO_Handle_t *pGPIOHandle){
 		temp2 = pGPIOHandle->GPIO_PinConfig.GPIO_PinNumber % 8; 	// Select the pin x configuration bits
 		pGPIOHandle->pGPIOx->AFR[temp1] &= ~(0xF << (4 * temp2 ));		// Clear the current value
 		temp  = pGPIOHandle->GPIO_PinConfig.GPIO_PinAltFunMode << ( 4 * temp2 );
-		pGPIOHandle->pGPIOx->PUPDR |= temp;		// Setting
+		pGPIOHandle->pGPIOx->AFR[temp1] |= temp;		// Setting
 	}
 
 }
