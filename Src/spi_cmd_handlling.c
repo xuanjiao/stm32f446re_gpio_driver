@@ -1,7 +1,7 @@
 /*
- * spi_tx_demo.c
+ * spi_cmd_handlling.c
  *
- *  Created on: März 6,2021
+ *  Created on: Mar 7, 2021
  *      Author: Xuanjiao Zhu
  */
 
@@ -59,13 +59,13 @@ void SPI2_Init(void)
 {
 	SPI_Handle_t SPIHandle;
 	SPIHandle.pSPIx = SPI2;
-	SPIHandle.SPIConfig.SPI_DeviceMode = SPI_DEV_MODE_MASTER;
-	SPIHandle.SPIConfig.SPI_BusConfig = SPI_BUS_CONFIG_FD;
-	SPIHandle.SPIConfig.SPI_DFF = SPI_DFF_8BITS;
-	SPIHandle.SPIConfig.SPI_SclkSpeed = SPI_SCLK_SPEED_DIV8;
-	SPIHandle.SPIConfig.SPI_CPHA = SPI_CPHA_LOW;
-	SPIHandle.SPIConfig.SPI_CPOL = SPI_CPOL_LOW;
-	SPIHandle.SPIConfig.SPI_SSM = SPI_SSM_DI;
+	SPIHandle.SPI_Config.SPI_DeviceMode = SPI_DEV_MODE_MASTER;
+	SPIHandle.SPI_Config.SPI_BusConfig = SPI_BUS_CONFIG_FD;
+	SPIHandle.SPI_Config.SPI_DFF = SPI_DFF_8BITS;
+	SPIHandle.SPI_Config.SPI_SclkSpeed = SPI_SCLK_SPEED_DIV8;
+	SPIHandle.SPI_Config.SPI_CPHA = SPI_CPHA_LOW;
+	SPIHandle.SPI_Config.SPI_CPOL = SPI_CPOL_LOW;
+	SPIHandle.SPI_Config.SPI_SSM = SPI_SSM_DI;
 
 	SPI_Init(&SPIHandle);
 
@@ -100,13 +100,9 @@ int main(){
 	// Initialize SPI2 parameters
 	SPI2_Init();
 
-	// Set NSS to high
-	//SPI_SSIConfig(SPI2,ENABLE);
 
 	// When SPE = 1, NSS will be pulled to low, and NSS pin will be high when SPE = 0
 	SPI_SSOEConfig(SPI2, ENABLE);
-
-
 
 	while(1)
 	{
@@ -132,5 +128,8 @@ int main(){
 
 
 }
+
+
+
 
 
