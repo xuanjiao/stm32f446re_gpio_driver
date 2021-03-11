@@ -9,8 +9,11 @@
 #define INC_STM32F446XX_H_
 
 #include<stdint.h>
+#include <stdio.h>
+#include <stdlib.h>
 
 #define __vo volatile
+#define __weak  __attribute__((weak))
 
 /**********************************START:Processor Specific Details **********************************/
 /*
@@ -44,10 +47,10 @@
 /*
  * Base addresses of MCU's embedded memories
  */
-#define FLASH_BASEADDR						((uint32_t)0x08000000)	/* Base address of flash */
-#define SRAM1_BASEADDR						((uint32_t)0x20000000)	/* Base address of SRAM1 */
-#define	SRAM2_BASEADDR						((uint32_t)0x2001C000)	/* Base address of SRAM2 */
-#define ROM									((uint32_t)0x1FFF0000)    /* Base address of System memory */
+#define FLASH_BASEADDR						0x08000000U	/* Base address of flash */
+#define SRAM1_BASEADDR						0x20000000U	/* Base address of SRAM1 */
+#define	SRAM2_BASEADDR						0x2001C000U	/* Base address of SRAM2 */
+#define ROM									0x1FFF0000U    /* Base address of System memory */
 #define SRAM								SRAM1_BASEADDR			/* SRAM consists of SRAM1 and SRAM2*/
 
 /*
@@ -55,10 +58,11 @@
  * AHB bus is used for peripherals which need high speed data communication.
  * APB bus is used for peripherals capable of low speed data communication.
  */
-#define APB1PERIPH_BASE						((uint32_t)0x40000000)	/* Base address of APB1 bus */
-#define APB2PERIPH_BASE						((uint32_t)0x40010000)	/* Base address of APB2 bus */
-#define AHB1PERIPH_BASE						((uint32_t)0x40020000)	/* Base address of AHB1 bus */
-#define AHB2PERIPH_BASE						((uint32_t)0x50000000)	/* Base address of AHB2 bus */
+#define PERIPH_BASEADDR 					0x40000000U
+#define APB1PERIPH_BASE						PERIPH_BASEADDR	/* Base address of APB1 bus */
+#define APB2PERIPH_BASE						0x40010000U	/* Base address of APB2 bus */
+#define AHB1PERIPH_BASE						0x40020000U	/* Base address of AHB1 bus */
+#define AHB2PERIPH_BASE						0x50000000U	/* Base address of AHB2 bus */
 
 /*
  * Base addresses of peripherals which are hanging on AHB1 bus
@@ -308,6 +312,14 @@ typedef struct{
 #define GPIOH_REG_RESET()					do{ RCC->AHB1RSTR |= ( 1 << 7 ); RCC->AHB1RSTR &= ~( 1 << 7 ); } while(0)
 
 /*
+ * Reset Macros for SPIx peripherals
+ */
+#define SPI1_REG_RESET()						do{ RCC->APB2RSTR |= ( 1 << 12 ); RCC->APB2RSTR |= ~( 1 << 12 );} while(0)
+#define SPI2_REG_RESET()						do{ RCC->APB1RSTR |= ( 1 << 14 ); RCC->APB1RSTR |= ~( 1 << 14 );} while(0)
+#define SPI3_REG_RESET()						do{ RCC->APB1RSTR |= ( 1 << 15 ); RCC->APB1RSTR |= ~( 1 << 15 );} while(0)
+#define SPI4_REG_RESET()						do{ RCC->APB2RSTR |= ( 1 << 13 ); RCC->APB1RSTR |= ~( 1 << 13 );} while(0)
+
+/*
  * Convert GPIO Port base address to code
  */
 #define GPIO_BASEADDR_TO_CODE(x)			( ( x == GPIOA )? 0: \
@@ -319,13 +331,6 @@ typedef struct{
 											  ( x == GPIOG )? 6: \
 											  ( x == GPIOH )? 7:0 )
 
-/*
- * Reset Macros for SPIx peripherals
- */
-#define SPI1_REG_RESET()						do{ RCC->APB2RSTR |= ( 1 << 12 ); RCC->APB2RSTR |= ~( 1 << 12 );} while(0)
-#define SPI2_REG_RESET()						do{ RCC->APB1RSTR |= ( 1 << 14 ); RCC->APB1RSTR |= ~( 1 << 14 );} while(0)
-#define SPI3_REG_RESET()						do{ RCC->APB1RSTR |= ( 1 << 15 ); RCC->APB1RSTR |= ~( 1 << 15 );} while(0)
-#define SPI4_REG_RESET()						do{ RCC->APB2RSTR |= ( 1 << 13 ); RCC->APB1RSTR |= ~( 1 << 13 );} while(0)
 
 /*
  * IRQ(Interrupt Request) Numbers of STM32F446x MCU
@@ -341,7 +346,7 @@ typedef struct{
 #define IRQ_NO_SPI1			35
 #define IRQ_NO_SPI2         36
 #define IRQ_NO_SPI3         51
-#define IRQ_NO_SPI4
+#define IRQ_NO_SPI4			84
 #define IRQ_NO_I2C1_EV     31
 #define IRQ_NO_I2C1_ER     32
 #define IRQ_NO_USART1	    37
@@ -356,20 +361,20 @@ typedef struct{
  * 　Macros for all the possible priority levels
  */
 #define NVIC_IRQ_PRI0    	0
-#define NVIC_IRQ_PRI1    	0
-#define NVIC_IRQ_PRI2    	0
-#define NVIC_IRQ_PRI3   	0
-#define NVIC_IRQ_PRI4    	0
-#define NVIC_IRQ_PRI5    	0
-#define NVIC_IRQ_PRI6    	0
-#define NVIC_IRQ_PRI7    	0
-#define NVIC_IRQ_PRI8    	0
-#define NVIC_IRQ_PRI9    	0
-#define NVIC_IRQ_PRI10    	0
-#define NVIC_IRQ_PRI11    	0
-#define NVIC_IRQ_PRI12    	0
-#define NVIC_IRQ_PRI13    	0
-#define NVIC_IRQ_PRI14    	0
+#define NVIC_IRQ_PRI1    	1
+#define NVIC_IRQ_PRI2    	2
+#define NVIC_IRQ_PRI3   	3
+#define NVIC_IRQ_PRI4    	4
+#define NVIC_IRQ_PRI5    	5
+#define NVIC_IRQ_PRI6    	6
+#define NVIC_IRQ_PRI7    	7
+#define NVIC_IRQ_PRI8    	8
+#define NVIC_IRQ_PRI9    	9
+#define NVIC_IRQ_PRI10    	10
+#define NVIC_IRQ_PRI11    	11
+#define NVIC_IRQ_PRI12    	12
+#define NVIC_IRQ_PRI13    	13
+#define NVIC_IRQ_PRI14    	14
 #define NVIC_IRQ_PRI15    	15
 
 
