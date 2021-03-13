@@ -227,11 +227,11 @@ void SPI_IRQInterrputConfig(uint8_t IRQNumber, uint8_t EnorDi)
 
 		}else if ( IRQNumber >= 32 && IRQNumber < 64 )
 		{
-			*NVIC_ISER0 |= ( 1 << IRQNumber % 32 );
+			*NVIC_ISER1 |= ( 1 << IRQNumber % 32 );
 
 		}else if ( IRQNumber >= 64 && IRQNumber < 96 )
 		{
-			*NVIC_ISER0 |= ( 1 << IRQNumber % 64 );
+			*NVIC_ISER2 |= ( 1 << IRQNumber % 64 );
 		}
 	}else
 	{
@@ -319,7 +319,7 @@ uint8_t SPI_SendDataIT(SPI_Handle_t* pSPIHandle, uint8_t *pTxBuffer,uint32_t Len
  */
 uint8_t SPI_ReceiveDataIT(SPI_Handle_t* pSPIHandle, uint8_t *pRxBuffer,uint32_t Len)
 {
-	uint8_t rxState = pSPIHandle->TX_State;
+	uint8_t rxState = pSPIHandle->RX_State;
 
 	if(rxState != SPI_RX_STATE_BUSY)
 	{
@@ -328,7 +328,7 @@ uint8_t SPI_ReceiveDataIT(SPI_Handle_t* pSPIHandle, uint8_t *pRxBuffer,uint32_t 
 		pSPIHandle->RxBufferLen = Len;
 
 		// Set state to RX busy
-		pSPIHandle->TX_State = SPI_RX_STATE_BUSY;
+		pSPIHandle->RX_State = SPI_RX_STATE_BUSY;
 
 		// Enable the RXNE control bit to get interrupt whenever RXNE flag is set in SR register
 		pSPIHandle->pSPIx->CR2 |= ( 1 << SPI_CR2_RXNEIE);
@@ -353,8 +353,8 @@ void SPI_IRQHandling(SPI_Handle_t *pSPIHandle)
 	uint8_t temp1, temp2;
 
 	// Check whether transmit Tx buffer ready to be loaded
-	temp1 = pSPIHandle->pSPIx->CR2 | ( 1 << SPI_CR2_TXEIE);
-	temp2 = pSPIHandle->pSPIx->SR | ( 1 << SPI_SR_TXE);
+	temp1 = pSPIHandle->pSPIx->CR2 & ( 1 << SPI_CR2_TXEIE);
+	temp2 = pSPIHandle->pSPIx->SR & ( 1 << SPI_SR_TXE);
 
 	if (temp1 && temp2)
 	{
@@ -362,8 +362,8 @@ void SPI_IRQHandling(SPI_Handle_t *pSPIHandle)
 	}
 
 	// Check whether data received in Rx buffer
-	temp1 = pSPIHandle->pSPIx->CR2 | ( 1 << SPI_CR2_RXNEIE);
-	temp2 = pSPIHandle->pSPIx->SR | ( 1 << SPI_SR_RXNE);
+	temp1 = pSPIHandle->pSPIx->CR2 & ( 1 << SPI_CR2_RXNEIE);
+	temp2 = pSPIHandle->pSPIx->SR & ( 1 << SPI_SR_RXNE);
 
 	if (temp1 && temp2)
 	{
@@ -371,8 +371,8 @@ void SPI_IRQHandling(SPI_Handle_t *pSPIHandle)
 	}
 
 	// Check Overrun error
-	temp1 = pSPIHandle->pSPIx->CR2 | ( 1 << SPI_CR2_ERRIE);
-	temp2 = pSPIHandle->pSPIx->SR | ( 1 << SPI_SR_OVR);
+	temp1 = pSPIHandle->pSPIx->CR2 & ( 1 << SPI_CR2_ERRIE);
+	temp2 = pSPIHandle->pSPIx->SR & ( 1 << SPI_SR_OVR);
 
 	if (temp1 && temp2)
 	{
