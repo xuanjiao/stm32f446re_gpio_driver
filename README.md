@@ -17,13 +17,14 @@ Drivers for SPI peripherals of STM32F446RE Microcontroller and some demo.
 
 # Usage
 
+## Use drivers in a customer project
 Copy the entire `driver` folder to your project directory. In `driver` folder,
 
 - `stm32f446xx.h` is MCU specific header file which contains microcontroller specific data
 -  `stm32f446xx_gpio.h` and `stm32f446xx_spi.h` are driver header files which contains driver specific data 
 -  `stm32f446xx_gpio.c` and `stm32f446xx_spi.c` are driver source files
 
-## Run demo
+## Run example
 1. Build the circult (Figure 1)
 1. Open arduino program in `Arduino` folder and flash it to Arduino Uno board 
 2. Open project in IDE (e.g. STM32Cube), build project with `spi_msg_recv_it.c` file
