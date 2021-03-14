@@ -1,4 +1,4 @@
-# stm32f446re_driver
+# stm32f446re_spi_driver
 
 Drivers for SPI peripherals of STM32F446RE Microcontroller and some demo.
 
