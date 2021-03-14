@@ -2,7 +2,7 @@
 
 Drivers for SPI peripherals of STM32F446RE Microcontroller and some demo.
 
-##Requirements
+## Requirements
 
 1.	[STM32 Nucleo-64 development board](https://www.st.com/en/evaluation-tools/nucleo-f446re.html)
 2.	[Arduino Uno board](https://store.arduino.cc/arduino-uno-rev3)
@@ -11,20 +11,19 @@ Drivers for SPI peripherals of STM32F446RE Microcontroller and some demo.
 6.	Bread board
 7.	Jumper wires
 
-
 # Installation
 
 `git clone https://github.com/xuanjiao/stm32f446re_driver.git`
 
 # Usage
 
-Copy the entire driver folder to your project directory. In `driver` folder,
+Copy the entire `driver` folder to your project directory. In `driver` folder,
 
 - `stm32f446xx.h` is MCU specific header file which contains microcontroller specific data
 -  `stm32f446xx_gpio.h` and `stm32f446xx_spi.h` are driver header files which contains driver specific data 
 -  `stm32f446xx_gpio.c` and `stm32f446xx_spi.c` are driver source files
 
-##Demo
+## Run demo
 1. Build the circult (Figure 1)
 1. Open arduino program in `Arduino` folder and flash it to Arduino Uno board 
 2. Open project in IDE (e.g. STM32Cube), build project with `spi_msg_recv_it.c` file
