@@ -28,9 +28,9 @@ int main()
 	memset(&gpio_led,0,sizeof(gpio_led));
 	memset(&gpio_btn,0,sizeof(gpio_btn));
 
-	// External LED is connected to PB2
-	gpio_led.pGPIOx = GPIOB;
-	gpio_led.GPIO_PinConfig.GPIO_PinNumber = GPIO_PIN_NO_2;
+	// Internal LED is connected to PA5
+	gpio_led.pGPIOx = GPIOA;
+	gpio_led.GPIO_PinConfig.GPIO_PinNumber = GPIO_PIN_NO_5;
 	gpio_led.GPIO_PinConfig.GPIO_PinMode = GPIO_MODE_OUT;
 	gpio_led.GPIO_PinConfig.GPIO_PinOPType = GPIO_OUT_TYPE_PP;
 	gpio_led.GPIO_PinConfig.GPIO_PinPuPdControl = GPIO_PIN_NO_PU_PD;
@@ -67,6 +67,6 @@ void EXTI15_10_IRQHandler(void)
 {
 	delay();
 	GPIO_IRQHandling(GPIO_PIN_NO_13);			// The driver handle the interrupt
-	GPIO_ToggleOutputPin(GPIOB, GPIO_PIN_NO_2);	// Toggle the LED
+	GPIO_ToggleOutputPin(GPIOA, GPIO_PIN_NO_5);	// Toggle the LED
 }
 
