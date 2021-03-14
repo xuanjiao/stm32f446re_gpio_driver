@@ -440,6 +440,5 @@ typedef struct{
  * Include driver header files
  */
 #include "stm32f446xx_gpio.h"
-#include "stm32f446xx_spi.h"
 
 #endif /* INC_STM32F446XX_H_ */
