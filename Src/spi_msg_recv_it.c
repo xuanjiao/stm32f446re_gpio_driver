@@ -151,7 +151,7 @@ void SPI2_Init(void)
 	SPIHandle.SPI_Config.SPI_DeviceMode = SPI_DEV_MODE_MASTER;
 	SPIHandle.SPI_Config.SPI_BusConfig = SPI_BUS_CONFIG_FD;
 	SPIHandle.SPI_Config.SPI_DFF = SPI_DFF_8BITS;
-	SPIHandle.SPI_Config.SPI_SclkSpeed = SPI_SCLK_SPEED_DIV32;
+	SPIHandle.SPI_Config.SPI_SclkSpeed = SPI_SCLK_SPEED_DIV16;
 	SPIHandle.SPI_Config.SPI_CPHA = SPI_CPHA_LOW;
 	SPIHandle.SPI_Config.SPI_CPOL = SPI_CPOL_LOW;
 	SPIHandle.SPI_Config.SPI_SSM = SPI_SSM_DI;
