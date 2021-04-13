@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <projectDescription>
-	<name>stm32f446re_gpio_driver</name>
+	<name>stm32f446re_i2c_driver</name>
 	<comment></comment>
 	<projects>
 	</projects>
